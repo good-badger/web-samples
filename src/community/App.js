@@ -1,6 +1,8 @@
 import * as React from 'react';
 import QRCode from 'qrcode';
 import {ApprovalList} from './ApprovalList';
+import Paper from '@material-ui/core/Paper';
+
 
 const SERVER_PORT = 3000;
 const HOST = window.location.hostname;
@@ -31,7 +33,7 @@ class AppComponent extends React.Component {
 		return (
       <div>
         <div style={styles.title}>Homeless shelter in Cape Town</div>
-        <img src={this.state.imgSrc} alt="QR code could not be created"/>
+        <Paper><img style={styles.img} src="./images/shelter.jpeg"/><img src={this.state.imgSrc} alt="QR code could not be created"/></Paper>
         <ApprovalList />
       </div>
     );
@@ -41,8 +43,11 @@ class AppComponent extends React.Component {
 const styles = {
   title: {
     color: "red",
-    size: "20px"
+    textSize: "20px"
   },
+  img: {
+    padding: "10px"
+  }
 
 
 
