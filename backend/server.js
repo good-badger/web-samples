@@ -29,22 +29,19 @@ app.get('/api/community/callback', function(req, res, next) {
   }
 });
 
-app.post('/api/community/requestIssued', function(req, res, next) {
+app.get('/api/community/requestIssued', function(req, res, next) {
   // Comment out this line:
-  if(requests.some((val) =>{return val.wallet == req.query.wallet})){
+  console.log(req.query);
+  if(requests.length <= req.query.idx){
+    requests[idx].issued = true;
     // Request already exists
     res.json({
-      sucess: false
+      sucess: true
     });
   }else{
-      var r = req.query;
-      r.issued = false;
-      requests.push(r);
-      // And insert the new request
       res.json({
-        sucess: true
+        sucess: false
       });
-
   }
 });
 

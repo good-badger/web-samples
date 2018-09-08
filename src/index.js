@@ -4,45 +4,42 @@ import { BrowserRouter, Link, Route } from 'react-router-dom';
 import { DonationApp } from './donation/App';
 import { CommunityApp } from './community/App';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar'
+import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
-
 const NavBar = () => {
-  return(
-      <div>
-      <AppBar position="static">
-          <Toolbar>
-              <Typography variant="title" color="inherit">
-              Sample Applications for Issuing Badges for Work on Social Development Goals
-              </Typography>
-         </Toolbar>
-      </AppBar>
-      </div>
-  )
-}
-
+	return (
+		<div>
+			<AppBar position="static">
+				<Toolbar>
+					<Typography variant="title" color="inherit">
+						Sample Applications for Issuing Badges for Work on Social Development Goals
+					</Typography>
+				</Toolbar>
+			</AppBar>
+		</div>
+	);
+};
 
 export const App = () => (
-  <div>
-    <NavBar />
-    <Divider />
-    <nav>
-      <Link to="/donation">Donation App</Link>
-      <Link to="/community">Community Service App</Link>
-    </nav>
-    <div>
-      <Route path="/donation" component={DonationApp}/>
-      <Route path="/community" component={CommunityApp}/>
-    </div>
-  </div>
+	<div>
+		<NavBar />
+		<Divider />
+		<nav>
+			<Link to="/donation">Donation App</Link>
+			<Link to="/community">Community Service App</Link>
+		</nav>
+		<div>
+			<Route path="/donation" component={DonationApp} />
+			<Route path="/community" component={CommunityApp} />
+		</div>
+	</div>
 );
 
-
 ReactDOM.render(
-  <BrowserRouter>
-    <App/>
-  </BrowserRouter>,
-  document.getElementById('root')
+	<BrowserRouter>
+			<App />
+	</BrowserRouter>,
+	document.getElementById('root')
 );
