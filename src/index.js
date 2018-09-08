@@ -14,7 +14,7 @@ const NavBar = () => {
 			<AppBar position="static">
 				<Toolbar>
 					<Typography variant="title" color="inherit">
-						Sample Applications for Issuing Badges for Work on Social Development Goals
+						Sample Applications for Issuing Badges for Work done toward Social Development Goals
 					</Typography>
 				</Toolbar>
 			</AppBar>
@@ -26,14 +26,15 @@ export const App = () => (
 	<div>
 		<NavBar />
 		<Divider />
-		<nav>
+		<Toolbar>
 			<Link to="/donation">Donation App</Link>
 			<Link to="/community">Community Service App</Link>
-		</nav>
+		</Toolbar>
 		<div>
 			<Route path="/donation" component={DonationApp} />
 			<Route path="/community" component={CommunityApp} />
 		</div>
+		<Divider />
 	</div>
 );
 
