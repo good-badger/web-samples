@@ -30,7 +30,7 @@ class AppComponent extends React.Component {
 
 		return (
       <div>
-        <div style={styles.title}>CommunityApp is running</div>
+        <div style={styles.title}>Homeless shelter in Cape Town</div>
         <img src={this.state.imgSrc} alt="QR code could not be created"/>
         <ApprovalList />
       </div>
@@ -40,7 +40,8 @@ class AppComponent extends React.Component {
 
 const styles = {
   title: {
-    color: "red"
+    color: "red",
+    size: "20px"
   },
 
 

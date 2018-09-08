@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Web3 from 'web3';
+import Button from '@material-ui/core/Button';
 
 const BADGE_TOKEN_ABI = require('../contracts/ERC721Badge.json');
 
@@ -71,7 +72,7 @@ class ApprovalListComponent extends React.Component {
             return (<tr key={i}>
               <td>{r.name}</td>
               <td>{r.wallet}</td>
-              <td><button onClick={() => this.sendBadge(i)}>Generate</button></td>
+              <td><Button variant="contained" color="primary" onClick={() => this.sendBadge(i)}>Issue Badge</Button></td>
             </tr>);
           }
         )}

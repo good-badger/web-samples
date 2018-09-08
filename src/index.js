@@ -3,10 +3,31 @@ import * as ReactDOM from 'react-dom';
 import { BrowserRouter, Link, Route } from 'react-router-dom';
 import { DonationApp } from './donation/App';
 import { CommunityApp } from './community/App';
-//import { DappRequirements } from 'react-dapp-requirements';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+
+
+const NavBar = () => {
+  return(
+      <div>
+      <AppBar position="static">
+          <Toolbar>
+              <Typography variant="title" color="inherit">
+              Sample Applications for Issuing Badges for Work on Social Development Goals
+              </Typography>
+         </Toolbar>
+      </AppBar>
+      </div>
+  )
+}
+
 
 export const App = () => (
   <div>
+    <NavBar />
+    <Divider />
     <nav>
       <Link to="/donation">Donation App</Link>
       <Link to="/community">Community Service App</Link>
