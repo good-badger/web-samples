@@ -1,6 +1,11 @@
 import * as React from 'react';
 import Web3 from 'web3';
 import Button from '@material-ui/core/Button';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 const BADGE_TOKEN_ABI = require('../contracts/ERC721Badge.json');
 
@@ -62,22 +67,40 @@ class ApprovalListComponent extends React.Component {
     }
   }
 
+  renderButton(request, i){
+    if(!request.issued){
+      return (<Button variant="contained" color="primary" onClick={() => this.sendBadge(i)}>Issue Badge</Button>);
+    }else{
+      return null;
+    }
+  }
+
   render() {
 
 		return (
       <div>
-        <table>
-          <tbody>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Wallet</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
           {this.state.requests.map((r, i)=>{
-            return (<tr key={i}>
-              <td>{r.name}</td>
-              <td>{r.wallet}</td>
-              <td><Button variant="contained" color="primary" onClick={() => this.sendBadge(i)}>Issue Badge</Button></td>
-            </tr>);
+            return (
+            <TableRow key={i}>
+              <TableCell>{r.name}</TableCell>
+              <TableCell>{r.wallet}</TableCell>
+              <TableCell>
+                {this.renderButton(r, i)}
+              </TableCell>
+            </TableRow>);
           }
         )}
-        </tbody>
-        </table>
+        </TableBody>
+        </Table>
       </div>
     );
   }

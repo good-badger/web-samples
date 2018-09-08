@@ -18,7 +18,28 @@ app.get('/api/community/callback', function(req, res, next) {
       sucess: false
     });
   }else{
-      requests.push(req.query);
+      var r = req.query;
+      r.issued = false;
+      requests.push(r);
+      // And insert the new request
+      res.json({
+        sucess: true
+      });
+
+  }
+});
+
+app.post('/api/community/requestIssued', function(req, res, next) {
+  // Comment out this line:
+  if(requests.some((val) =>{return val.wallet == req.query.wallet})){
+    // Request already exists
+    res.json({
+      sucess: false
+    });
+  }else{
+      var r = req.query;
+      r.issued = false;
+      requests.push(r);
       // And insert the new request
       res.json({
         sucess: true
