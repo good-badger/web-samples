@@ -1,6 +1,7 @@
 import * as React from 'react';
 import QRCode from 'qrcode';
 import {ApprovalList} from './ApprovalList';
+import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 
 
@@ -32,8 +33,8 @@ class AppComponent extends React.Component {
 
 		return (
       <div>
-        <div style={styles.title}>Homeless shelter in Cape Town</div>
-        <Paper><img style={styles.img} src="./images/shelter.jpeg"/><img src={this.state.imgSrc} alt="QR code could not be created"/></Paper>
+        <Typography variant="headline" component="h3">Homeless shelter in Cape Town</Typography>
+        <Paper><img style={styles.img} src="./images/shelter.jpeg" alt="Homeless shelter"/><img src={this.state.imgSrc} alt="QR code could not be created"/></Paper>
         <ApprovalList />
       </div>
     );

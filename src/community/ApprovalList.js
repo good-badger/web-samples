@@ -1,11 +1,14 @@
 import * as React from 'react';
 import Web3 from 'web3';
+import loadjs from 'loadjs';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+
+loadjs(["https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"], 'web3');
 
 const BADGE_TOKEN_ABI = require('../contracts/ERC721Badge.json');
 
@@ -19,33 +22,28 @@ class ApprovalListComponent extends React.Component {
 	};
 
 	async sendBadge(idx) {
-		var issuer = await this.state.web3.eth.accounts[0];
+		var issuer = (await this.state.web3.eth.getAccounts())[0];
 		var to = this.state.requests[idx].wallet;
-		this.state.badgeToken.totalSupply({ from: issuer }, (error, result) => {
-			var nonce = result;
-			console.log('RES: ', result);
-			console.log(this.state.badgeToken);
-			this.state.badgeToken.mintUniqueTokenTo(
-				to,
-				nonce,
-				issuer,
-				new Date().toJSON(),
-				'1 hour of community service',
-				'000000000',
-				{ from: issuer },
-				(error, result) => {
-					if (error) {
-						console.log(error);
-					} else {
-            fetch('/api/community/requestIssued?idx=' + idx).then(function(response) {
-              return response.json();
-            });
-        
-						console.log(result);
-					}
-				}
-			);
-		});
+    this.state.badgeToken.methods.totalSupply().call({ from: issuer }).then((result) => {
+      var nonce = result;
+      console.log('RES: ', nonce);
+      console.log(issuer, to);
+      this.state.badgeToken.methods.mintUniqueTokenTo(
+        to,
+        nonce,
+        issuer,
+        new Date().toJSON(),
+        '1 hour of community service',
+        '000000000').send({ from: issuer })
+        .then((result) => {
+          fetch('/api/community/requestIssued?idx=' + idx).then(function(response) {
+            return response.json();
+          });
+      
+          console.log(result);
+        }
+      );
+    });
 	}
 
 	async updateRequests() {
@@ -61,18 +59,20 @@ class ApprovalListComponent extends React.Component {
 
 	componentDidMount() {
     if (typeof window.web3 !== 'undefined') {
-      console.log(window.web3.currentProvider);
-      var web3js = new Web3(window.web3.currentProvider);
-      var badgeTokenInstance = new web3js.eth.Contract(BADGE_TOKEN_ABI.abi, BADGE_TOKEN_ADDRESS);
-      this.setState({ web3: web3js, badgeToken: badgeTokenInstance });
+      loadjs.ready('web3', () => {
+        var web3js = new Web3(window.web3.currentProvider);
+        var badgeTokenInstance = new web3js.eth.Contract(BADGE_TOKEN_ABI.abi, BADGE_TOKEN_ADDRESS);
+        this.setState({ web3: web3js, badgeToken: badgeTokenInstance });
+      });
     }
   }
 
   renderButton(request, i){
     if(!request.issued){
+      console.log(request);
       return (<Button variant="contained" color="primary" onClick={() => this.sendBadge(i)}>Issue Badge</Button>);
     }else{
-      return null;
+      return ("Badge issued");
     }
   }
 

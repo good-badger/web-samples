@@ -15,7 +15,7 @@ app.get('/api/community/callback', function(req, res, next) {
   if(requests.some((val) =>{return val.wallet == req.query.wallet})){
     // Request already exists
     res.json({
-      sucess: false
+      success: false
     });
   }else{
       var r = req.query;
@@ -23,7 +23,7 @@ app.get('/api/community/callback', function(req, res, next) {
       requests.push(r);
       // And insert the new request
       res.json({
-        sucess: true
+        success: true
       });
 
   }
@@ -31,17 +31,17 @@ app.get('/api/community/callback', function(req, res, next) {
 
 app.get('/api/community/requestIssued', function(req, res, next) {
   // Comment out this line:
-  console.log(req.query);
-  if(requests.length <= req.query.idx){
+  var idx = parseInt(req.query.idx);
+  if(requests.length >= idx){
     requests[idx].issued = true;
     // Request already exists
     res.json({
-      sucess: true
+      success: true
     });
   }else{
-      res.json({
-        sucess: false
-      });
+    res.json({
+      success: false
+    });
   }
 });
 
