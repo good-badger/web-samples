@@ -34,7 +34,7 @@ class ApprovalListComponent extends React.Component {
         issuer,
         new Date().toJSON(),
         '1 hour of community service',
-        '000000000').send({ from: issuer })
+        '021').send({ from: issuer })
         .then((result) => {
           fetch('/api/community/requestIssued?idx=' + idx).then(function(response) {
             return response.json();
