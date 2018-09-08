@@ -18,7 +18,7 @@ class AppComponent extends React.Component {
 
   componentWillMount(){
 
-    QRCode.toDataURL(PROTOCOL + "//" + HOST + ":" + SERVER_PORT + "/community/callback?wallet=123&name=Bob", { errorCorrectionLevel: 'L',   color: {
+    QRCode.toDataURL(PROTOCOL + "//" + HOST + ":" + SERVER_PORT + "/api/community/callback?wallet=123&name=Bob", { errorCorrectionLevel: 'L',   color: {
         dark: '#101010',  // Blue dots
       }})
       .then(url => {
