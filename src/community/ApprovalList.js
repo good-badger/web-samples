@@ -7,6 +7,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import StarBorder from '@material-ui/icons/StarBorder';
+import StarIcon from '@material-ui/icons/Star';
 
 
 loadjs(["https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"], 'web3');
@@ -24,18 +26,18 @@ class ApprovalListComponent extends React.Component {
 
 	async sendBadge(idx) {
 		var issuer = (await this.state.web3.eth.getAccounts())[0];
-		var to = this.state.requests[idx].wallet;
+    var to = this.state.requests[idx].wallet;
+    var stars = (this.state.requests[idx].stars || 1);
+    var sdg = "" + this.props.sdg;
     this.state.badgeToken.methods.totalSupply().call({ from: issuer }).then((result) => {
       var nonce = result;
-      console.log('RES: ', nonce);
-      console.log(issuer, to);
       this.state.badgeToken.methods.mintUniqueTokenTo(
         to,
         nonce,
         issuer,
         new Date().toJSON(),
         '1 hour of community service',
-        '021').send({ from: issuer })
+        sdg+stars).send({ from: issuer })
         .then((result) => {
           fetch('/api/community/requestIssued?idx=' + idx).then(function(response) {
             return response.json();
@@ -70,12 +72,47 @@ class ApprovalListComponent extends React.Component {
 
   renderButton(request, i){
     if(!request.issued){
-      console.log(request);
       return (<Button variant="contained" color="primary" onClick={() => this.sendBadge(i)}>Issue Badge</Button>);
     }else{
       return ("Badge issued");
     }
   }
+
+  renderStars(request, i){
+    if(!request.issued){
+      if(this.state.stars === 1){
+        request.stars = 1;
+        return(
+          <div>
+            <StarIcon style={styles.star} onClick={() => this.setState({stars: 1})}/>
+            <StarBorder style={styles.star} onClick={() => this.setState({stars: 2})}/>
+            <StarBorder style={styles.star} onClick={() => this.setState({stars: 3})}/>
+          </div>
+        )
+      }else if(this.state.stars === 2){
+        request.stars = 2;
+        return(
+          <div>
+            <StarIcon style={styles.star} onClick={() => this.setState({stars: 1})}/>
+            <StarIcon style={styles.star} onClick={() => this.setState({stars: 2})}/>
+            <StarBorder style={styles.star} onClick={() => this.setState({stars: 3})}/>
+          </div>
+        )
+      }else{
+        request.stars = 3;
+        return(
+          <div>
+            <StarIcon style={styles.star} onClick={() => this.setState({stars: 1})}/>
+            <StarIcon style={styles.star} onClick={() => this.setState({stars: 2})}/>
+            <StarIcon style={styles.star} onClick={() => this.setState({stars: 3})}/>
+          </div>
+        )
+      }
+    }else{
+      return null;
+    }
+  }
+
 
 	render() {
 		return (
@@ -86,18 +123,25 @@ class ApprovalListComponent extends React.Component {
               <TableCell>Name</TableCell>
               <TableCell>Wallet</TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
           {this.state.requests.map((r, i)=>{
-            return (
-            <TableRow key={i}>
-              <TableCell>{r.name}</TableCell>
-              <TableCell>{r.wallet}</TableCell>
-              <TableCell>
-                {this.renderButton(r, i)}
-              </TableCell>
-            </TableRow>);
+            if(r.expires === -1 || r.expires > Date.now()){
+              return (
+                <TableRow key={i}>
+                  <TableCell>{r.name}</TableCell>
+                  <TableCell>{r.wallet}</TableCell>
+                  <TableCell>{this.renderStars(r,i)}</TableCell>
+                  <TableCell>
+                    {this.renderButton(r, i)}
+                  </TableCell>
+                </TableRow>
+              );
+            }else{
+              return null;
+            }
           }
         )}
         </TableBody>
@@ -107,4 +151,9 @@ class ApprovalListComponent extends React.Component {
   }
 }
 
+const styles = {
+  stars: {
+    cursor: 'pointer',
+  },
+}
 export const ApprovalList = ApprovalListComponent;

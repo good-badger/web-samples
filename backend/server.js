@@ -17,7 +17,7 @@ var requests = [];
 
 app.get('/api/community/callback', function(req, res, next) {
   // Comment out this line:
-  if(requests.some((val) =>{return val.wallet == req.query.wallet})){
+  if(requests.some((val) =>{return val.wallet == req.query.wallet && val.issued==false})){
     // Request already exists
     res.json({
       success: false
@@ -25,6 +25,7 @@ app.get('/api/community/callback', function(req, res, next) {
   }else{
       var r = req.query;
       r.issued = false;
+      r.expires = -1;
       requests.push(r);
       // And insert the new request
       res.json({
@@ -39,6 +40,8 @@ app.get('/api/community/requestIssued', function(req, res, next) {
   var idx = parseInt(req.query.idx);
   if(requests.length >= idx){
     requests[idx].issued = true;
+    requests[idx].expires = Date.now() + 10000;
+
     // Request already exists
     res.json({
       success: true
@@ -51,9 +54,6 @@ app.get('/api/community/requestIssued', function(req, res, next) {
 });
 
 app.get('/api/community/requests', function(req, res, next) {
-  // Comment out this line:
-
-  // And insert something like this instead:
   res.json(requests);
 });
 

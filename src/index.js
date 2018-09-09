@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { BrowserRouter, Link, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import { DonationApp } from './donation/App';
 import { CommunityApp } from './community/App';
 import AppBar from '@material-ui/core/AppBar';
@@ -14,7 +14,7 @@ const NavBar = () => {
 			<AppBar position="static">
 				<Toolbar>
 					<Typography variant="title" color="inherit">
-						Sample Applications for Issuing Badges for Work done toward Social Development Goals
+						A Sample Application for Issuing Badges for Work done towards the UN's Social Development Goals
 					</Typography>
 				</Toolbar>
 			</AppBar>
@@ -26,13 +26,9 @@ export const App = () => (
 	<div>
 		<NavBar />
 		<Divider />
-		<Toolbar>
-			<Link to="/donation">Donation App</Link>
-			<Link to="/community">Community Service App</Link>
-		</Toolbar>
 		<div>
 			<Route path="/donation" component={DonationApp} />
-			<Route path="/community" component={CommunityApp} />
+			<Route path="/" component={CommunityApp} />
 		</div>
 		<Divider />
 	</div>
