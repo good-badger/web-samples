@@ -8,11 +8,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+
 loadjs(["https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"], 'web3');
 
 const BADGE_TOKEN_ABI = require('../contracts/ERC721Badge.json');
 
-const BADGE_TOKEN_ADDRESS = '0xbE3d961d2dbbB42dB8A03B083a28119FC99CCA20';
+const BADGE_TOKEN_ADDRESS = process.env.REACT_APP_BADGE_TOKEN_ADDRESS; //'0xbE3d961d2dbbB42dB8A03B083a28119FC99CCA20';
 
 class ApprovalListComponent extends React.Component {
 	state = {

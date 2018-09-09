@@ -1,3 +1,4 @@
+const Web3 = require('web3');
 var express = require('express');
 var router = express.Router();
 
@@ -7,6 +8,10 @@ var app = express();
 const PORT = 3000;
 
 require('dotenv').config();
+var network = process.env.ETH_NETWORK;
+const BADGE_TOKEN_ABI = require('../src/contracts/ERC721Badge.json');
+
+var BADGE_TOKEN_ADDRESS = process.env.REACT_APP_BADGE_TOKEN_ADDRESS;
 
 var requests = [];
 
@@ -52,26 +57,40 @@ app.get('/api/community/requests', function(req, res, next) {
   res.json(requests);
 });
 
+getTokensForWallet = (wallet) => {
+  var web3 = new Web3(new Web3.providers.HttpProvider(network));
+  var badgeTokenInstance = new web3.eth.Contract(BADGE_TOKEN_ABI.abi, BADGE_TOKEN_ADDRESS);
+  return badgeTokenInstance.methods.balanceOf(wallet).call().then((result) => {
+    var tot = result;
+    var promises = [];
+    for(i=0; i<tot; ++i){
+      promises.push(badgeTokenInstance.methods.tokenOfOwnerByIndex(wallet,i).call());
+    }
+    return Promise.all(promises).then((results) => {
+      var promises2 = [];
+      for(j=0; j<results.length; ++j){
+        promises2.push(badgeTokenInstance.methods.getArtwork(results[j]).call());
+      }
+      return Promise.all(promises2).then((artworks) => {
+        var badges = [];
+        for(j=0; j<results.length; ++j){
+          badges.push({
+            idx: results[j], 
+            artwork: artworks[j]
+          });
+        }
+        return badges;
+      })
+    })
+  })
+};
+
 app.get('/api/badges', function(req, res, next) {
   var wallet = req.query.wallet;
-  var badges = [
-    {
-      artwork: '032',
-      issuer: '1234',
-      date: '2018-09-08T23:08:56.145Z', 
-      description: '1 hour of community service',
-      owner: '3456',
-    },
-    {
-      artwork: '031',
-      issuer: '1234',
-      date: '2018-09-10T23:08:56.145Z', 
-      description: '2 hour of community service',
-      owner: '3456',
-    }
-  ];
+  getTokensForWallet(wallet).then((badges) => {
+    res.json(badges);
+  })
 
-  res.json(badges);
 });
 
 app.listen(PORT); //listens on port 3000 -> http://localhost:3000/

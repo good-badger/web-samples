@@ -2,7 +2,6 @@ import * as React from 'react';
 import QRCode from 'qrcode';
 import {ApprovalList} from './ApprovalList';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
