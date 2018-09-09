@@ -90,7 +90,27 @@ app.get('/api/badges', function(req, res, next) {
   getTokensForWallet(wallet).then((badges) => {
     res.json(badges);
   })
+});
 
+getTokenForId = (tokenId) => {
+  var web3 = new Web3(new Web3.providers.HttpProvider(network));
+  var badgeTokenInstance = new web3.eth.Contract(BADGE_TOKEN_ABI.abi, BADGE_TOKEN_ADDRESS);
+  var promises = [];
+  var badge = {};
+  promises.push(badgeTokenInstance.methods.getArtwork(tokenId).call().then((res) => {badge['artwork'] = res; return res}));
+  promises.push(badgeTokenInstance.methods.getDescription(tokenId).call().then((res) => {badge['description'] = res; return res}));
+  promises.push(badgeTokenInstance.methods.getIssuer(tokenId).call().then((res) => {badge['issuer'] = res; return res}));
+  promises.push(badgeTokenInstance.methods.getDate(tokenId).call().then((res) => {badge['date'] = res; return res}));
+  return Promise.all(promises).then((results) => {
+    return badge;
+  })
+};
+
+app.get('/api/badge', function(req, res, next) {
+  var tokenId = req.query.id;
+  getTokenForId(tokenId).then((badge) => {
+    res.json(badge);
+  })
 });
 
 app.listen(PORT); //listens on port 3000 -> http://localhost:3000/
